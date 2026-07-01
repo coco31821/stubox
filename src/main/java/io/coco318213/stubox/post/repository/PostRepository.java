@@ -1,0 +1,13 @@
+package io.coco318213.stubox.post.repository;
+
+import io.coco318213.stubox.post.domain.Post;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface PostRepository extends JpaRepository<Post, Long> {
+
+    List<Post> findAllByOrderByCreatedAtDesc();
+
+    List<Post> findByBoard_BoardIdOrderByCreatedAtDesc(Long boardId);
+}

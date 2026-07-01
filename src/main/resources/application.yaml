@@ -1,3 +1,5 @@
 spring:
   application:
     name: stubox
+  profiles:
+    active: prod

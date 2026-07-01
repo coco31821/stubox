@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout('게시글', ~{::content})}">
+<section th:fragment="content" class="space-y-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+            <p class="text-sm font-semibold text-primary">Simple blog</p>
+            <h1 class="text-3xl font-bold tracking-normal">게시글</h1>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <button class="btn btn-outline auth-only hidden" type="button" data-open-board-dialog>게시판 만들기</button>
+            <a class="btn btn-primary auth-only hidden" th:href="@{/posts/new}">글쓰기</a>
+        </div>
+    </div>
+
+    <dialog class="modal" data-board-dialog>
+        <div class="modal-box max-w-md">
+            <h2 class="text-xl font-bold">게시판 만들기</h2>
+            <form class="mt-5 space-y-5" data-board-form>
+                <label class="form-control">
+                    <span class="label-text mb-2">게시판 이름</span>
+                    <input class="input input-bordered"
+                           type="text"
+                           name="name"
+                           maxlength="50"
+                           required
+                           autocomplete="off">
+                </label>
+
+                <div class="flex justify-end gap-2">
+                    <button class="btn btn-ghost" type="button" data-close-board-dialog>취소</button>
+                    <button class="btn btn-primary" type="submit">생성</button>
+                </div>
+            </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>닫기</button>
+        </form>
+    </dialog>
+
+    <div class="tabs tabs-boxed w-fit max-w-full overflow-x-auto bg-base-100">
+        <a class="tab"
+           th:classappend="${selectedBoardId == null} ? 'tab-active'"
+           th:href="@{/posts}">전체</a>
+        <a class="tab"
+           th:each="board : ${boards}"
+           th:classappend="${selectedBoardId == board.boardId()} ? 'tab-active'"
+           th:href="@{/posts(boardId=${board.boardId()})}"
+           th:text="${board.name()}">board</a>
+    </div>
+
+    <div class="rounded-box border border-base-300 bg-base-100">
+        <div th:if="${#lists.isEmpty(posts)}" class="p-12 text-center">
+            <p class="text-lg font-semibold">아직 게시글이 없습니다.</p>
+            <p class="mt-2 text-sm text-base-content/60">로그인 후 첫 글을 작성해보세요.</p>
+        </div>
+
+        <a th:each="post : ${posts}"
+           class="block border-b border-base-300 p-5 transition hover:bg-base-200 last:border-b-0"
+           th:href="@{/posts/{postId}(postId=${post.postId()})}">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div class="min-w-0">
+                    <div class="mb-2 flex flex-wrap items-center gap-2">
+                        <span class="badge badge-primary badge-outline" th:text="${post.boardName()}">board</span>
+                        <span class="text-sm text-base-content/60" th:text="${post.nickname()}">nickname</span>
+                    </div>
+                    <h2 class="line-clamp-1 text-xl font-semibold" th:text="${post.title()}">title</h2>
+                    <p class="mt-2 line-clamp-2 text-sm leading-6 text-base-content/70" th:text="${post.content()}">content</p>
+                </div>
+                <time class="shrink-0 text-sm text-base-content/50" th:text="${post.createdAt()}">date</time>
+            </div>
+        </a>
+    </div>
+</section>
+</html>

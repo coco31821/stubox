@@ -1,0 +1,38 @@
+name: demo
+
+services:
+
+  lb:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+      - "81:81"
+    volumes:
+      - lb_data:/data
+      - lb_data:/etc/letsencrypt
+
+  app:
+    image: coco318213/stubox:latest
+    container_name: app
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      - db
+
+
+
+  db:
+    image: mysql
+    container_name: db
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin1234!
+      - MYSQL_DATABASE=stubox
+volumes:
+  lb_data:
+  db_data:
+
+

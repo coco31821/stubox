@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout('내 정보', ~{::content})}">
+<section th:fragment="content" class="mx-auto max-w-2xl space-y-6">
+    <div>
+        <p class="text-sm font-semibold text-primary">Account</p>
+        <h1 class="text-3xl font-bold tracking-normal">내 정보</h1>
+    </div>
+
+    <div class="guest-only rounded-box border border-base-300 bg-base-100 p-6 text-center">
+        <p class="font-semibold">로그인이 필요합니다.</p>
+        <a class="btn btn-primary mt-4" th:href="@{/login}">로그인</a>
+    </div>
+
+    <div class="auth-only hidden rounded-box border border-base-300 bg-base-100 p-6" data-me-panel>
+        <div class="skeleton h-6 w-40"></div>
+        <div class="skeleton mt-4 h-5 w-64"></div>
+    </div>
+</section>
+</html>

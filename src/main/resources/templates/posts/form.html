@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout('게시글', ~{::content})}">
+<section th:fragment="content" class="mx-auto max-w-3xl space-y-6">
+    <div>
+        <p class="text-sm font-semibold text-primary" th:text="${isEdit} ? 'Edit post' : 'New post'">New post</p>
+        <h1 class="text-3xl font-bold tracking-normal" th:text="${isEdit} ? '게시글 수정' : '게시글 작성'">게시글 작성</h1>
+    </div>
+
+    <div class="guest-only rounded-box border border-base-300 bg-base-100 p-6 text-center">
+        <p class="font-semibold">로그인이 필요한 화면입니다.</p>
+        <a class="btn btn-primary mt-4" th:href="@{/login}">로그인</a>
+    </div>
+
+    <form class="auth-only hidden rounded-box border border-base-300 bg-base-100 p-6"
+          data-post-form
+          th:attr="data-post-id=${isEdit ? post.postId() : ''}">
+        <div class="grid gap-5">
+            <label class="form-control" th:if="${!isEdit}">
+                <span class="label-text mb-2">게시판</span>
+                <select class="select select-bordered" name="boardId" required>
+                    <option value="">게시판 선택</option>
+                    <option th:each="board : ${boards}"
+                            th:value="${board.boardId()}"
+                            th:text="${board.name()}">board</option>
+                </select>
+            </label>
+
+            <div class="rounded-box bg-base-200 p-4" th:if="${isEdit}">
+                <span class="text-sm text-base-content/60">게시판</span>
+                <p class="font-semibold" th:text="${post.boardName()}">board</p>
+            </div>
+
+            <label class="form-control">
+                <span class="label-text mb-2">제목</span>
+                <input class="input input-bordered"
+                       type="text"
+                       name="title"
+                       maxlength="100"
+                       required
+                       th:value="${isEdit ? post.title() : ''}">
+            </label>
+
+            <label class="form-control">
+                <span class="label-text mb-2">본문</span>
+                <textarea class="textarea textarea-bordered min-h-72"
+                          name="content"
+                          required
+                          th:text="${isEdit ? post.content() : ''}"></textarea>
+            </label>
+        </div>
+
+        <div class="mt-6 flex justify-end gap-2">
+            <a class="btn btn-ghost" th:if="${isEdit}" th:href="@{/posts/{postId}(postId=${post.postId()})}">취소</a>
+            <a class="btn btn-ghost" th:unless="${isEdit}" th:href="@{/posts}">취소</a>
+            <button class="btn btn-primary" type="submit" th:text="${isEdit} ? '수정' : '작성'">작성</button>
+        </div>
+    </form>
+</section>
+</html>
